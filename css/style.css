@@ -1,0 +1,6 @@
+/* Master Stylesheet for S.D. Patel & Co. */
+@import url('./variables.css');
+@import url('./base.css');
+@import url('./animations.css');
+@import url('./components.css');
+

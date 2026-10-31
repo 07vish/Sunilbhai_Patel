@@ -1,0 +1,96 @@
+/* Design Tokens & Theme Variables */
+:root {
+  /* Color Palette - Refined Professional Gold & Slate */
+  --bg: #ffffff;
+  --bg-subtle: #f8f9fa;
+  --bg-card: #f2f3f5;
+  --bg-card-hover: #eaebee;
+  --line: #e3e4e8;
+  --line-strong: #cfd1d8;
+  
+  --ink: #19191c;
+  --ink-heading: #111113;
+  --muted: #5e606a;
+  --muted-light: #7a7d8a;
+  
+  --gold: #b38b3f;
+  --gold-hover: #9a742f;
+  --gold-subtle: rgba(179, 139, 63, 0.12);
+  --gold-glow: rgba(179, 139, 63, 0.25);
+  
+  --accent: #1e3a8a; /* Deep legal blue for secondary accents */
+  --accent-subtle: rgba(30, 58, 138, 0.08);
+  
+  --btn-bg: #b38b3f;
+  --btn-ink: #ffffff;
+  --btn-hover: #9a742f;
+
+  --whatsapp: #25d366;
+  --whatsapp-hover: #20bd5a;
+  
+  --field-bg: #f8f9fa;
+  --field-border: #dcdde2;
+  --field-focus: #b38b3f;
+  
+  --toast-bg: #19191c;
+  --toast-ink: #ffffff;
+  --toast-border: #2c2d33;
+
+  /* Typography */
+  --font-serif: "Source Serif 4", "Playfair Display", Cambria, Georgia, serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, system-ui, sans-serif;
+  
+  /* Motion & Physics (Emil Kowalski / Apple Standards) */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --duration-fast: 140ms;
+  --duration-normal: 220ms;
+  --duration-slow: 320ms;
+  
+  /* Layout & Spacing */
+  --max-width: 1140px;
+  --header-height: 64px;
+  --bottom-bar-height: 68px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  color-scheme: light;
+}
+
+/* Dark Theme */
+:root[data-theme="dark"] {
+  --bg: #0c0d0e;
+  --bg-subtle: #141518;
+  --bg-card: #1a1b1f;
+  --bg-card-hover: #222329;
+  --line: #26272e;
+  --line-strong: #383944;
+  
+  --ink: #f0f1f5;
+  --ink-heading: #ffffff;
+  --muted: #9ba0ad;
+  --muted-light: #7b808e;
+  
+  --gold: #d4ab5b;
+  --gold-hover: #e5bd6d;
+  --gold-subtle: rgba(212, 171, 91, 0.16);
+  --gold-glow: rgba(212, 171, 91, 0.3);
+  
+  --btn-bg: #d4ab5b;
+  --btn-ink: #121316;
+  --btn-hover: #e5bd6d;
+  
+  --field-bg: #141518;
+  --field-border: #2a2c35;
+  --field-focus: #d4ab5b;
+
+  --toast-bg: #1a1b1f;
+  --toast-ink: #f0f1f5;
+  --toast-border: #32343e;
+
+  color-scheme: dark;
+}
+

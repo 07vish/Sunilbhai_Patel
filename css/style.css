@@ -791,6 +791,20 @@ footer p, footer a {
   font-size: 13px;
 }
 
+.footer-credit {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 16px;
+  font-size: 13px;
+}
+
+.footer-credit a {
+  display: inline;
+}
+
 /* 12. Bar Council of India Minimal Disclaimer */
 .disclaimer-overlay {
   position: fixed;

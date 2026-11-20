@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 3. Active Link Highlight on Scroll
   const sections = document.querySelectorAll('section[id], div[id]');
   const navLinks = document.querySelectorAll('nav.desktop-nav a');
+  const mobileNavLinks = document.querySelectorAll('.mobile-nav-links a');
 
   window.addEventListener('scroll', () => {
     let current = '';
@@ -72,9 +73,74 @@ document.addEventListener('DOMContentLoaded', () => {
         link.classList.add('active');
       }
     });
+
+    mobileNavLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === `#${current}`) {
+        link.classList.add('active');
+      }
+    });
   }, { passive: true });
 
-  // 4. Contact Form: Direct Email & WhatsApp Handlers
+  // 4. Mobile Navigation Drawer
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const mobileNavDrawer = document.getElementById('mobileNavDrawer');
+  const mobileNavClose = document.getElementById('mobileNavClose');
+  const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
+
+  function openMobileNav() {
+    if (!mobileNavDrawer) return;
+    mobileNavDrawer.classList.add('open');
+    mobileNavDrawer.setAttribute('aria-hidden', 'false');
+    if (mobileMenuBtn) {
+      mobileMenuBtn.classList.add('active');
+      mobileMenuBtn.setAttribute('aria-expanded', 'true');
+    }
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMobileNav() {
+    if (!mobileNavDrawer) return;
+    mobileNavDrawer.classList.remove('open');
+    mobileNavDrawer.setAttribute('aria-hidden', 'true');
+    if (mobileMenuBtn) {
+      mobileMenuBtn.classList.remove('active');
+      mobileMenuBtn.setAttribute('aria-expanded', 'false');
+    }
+    // Only restore overflow if disclaimer is not open
+    if (!disclaimerOverlay || !disclaimerOverlay.classList.contains('open')) {
+      document.body.style.overflow = '';
+    }
+  }
+
+  if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener('click', () => {
+      const isOpen = mobileNavDrawer && mobileNavDrawer.classList.contains('open');
+      if (isOpen) {
+        closeMobileNav();
+      } else {
+        openMobileNav();
+      }
+    });
+  }
+
+  if (mobileNavClose) mobileNavClose.addEventListener('click', closeMobileNav);
+  if (mobileNavBackdrop) mobileNavBackdrop.addEventListener('click', closeMobileNav);
+
+  mobileNavLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      closeMobileNav();
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeMobileNav();
+      closeDisclaimer();
+    }
+  });
+
+  // 5. Contact Form: Direct Email & WhatsApp Handlers
   const form = document.getElementById('f');
   const btnWhatsApp = document.getElementById('btnWhatsApp');
 

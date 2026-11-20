@@ -131,7 +131,7 @@ button {
   max-width: 780px;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 767px) {
   .wrap, .narrow {
     padding-left: 20px;
     padding-right: 20px;
@@ -524,13 +524,24 @@ section {
   margin-top: 8px;
 }
 
+.btn svg {
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+
 .num-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   font-size: clamp(26px, 3.8vw, 40px);
   font-weight: 600;
   letter-spacing: -0.015em;
   font-variant-numeric: tabular-nums;
   margin-top: 18px;
+}
+
+.num-link svg {
+  flex-shrink: 0;
 }
 
 .partner-secondary {
@@ -870,58 +881,746 @@ footer p, footer a {
   margin-top: 6px;
 }
 
-/* Mobile Quick Bar */
-.mobile-action-bar {
+/* ==========================================================================
+   Mobile-Only Component Base Definitions (Hidden on PC & Tablet)
+   ========================================================================== */
+.mobile-menu-btn {
   display: none;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 85;
-  background: color-mix(in srgb, var(--bg) 92%, transparent);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-  border-top: 1px solid var(--line);
-  padding: 8px 16px calc(8px + env(safe-area-inset-bottom, 0px));
-}
-
-@media (max-width: 640px) {
-  .mobile-action-bar {
-    display: flex;
-    gap: 8px;
-  }
-  body {
-    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
-  }
-  .brand span:last-child {
-    display: none;
-  }
-  header .btn {
-    display: none;
-  }
-  nav.desktop-nav {
-    gap: 16px;
-    font-size: 13px;
-  }
-}
-
-.mobile-action-bar a {
-  flex: 1;
-  display: flex;
+  width: 42px;
+  height: 42px;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 600;
-  background: var(--bg-alt);
-  color: var(--ink);
+  flex-direction: column;
+  gap: 5px;
+  background: var(--bg-surface);
   border: 1px solid var(--line);
+  border-radius: 12px;
+  cursor: pointer;
+  padding: 0;
+  touch-action: manipulation;
+  transition: background-color 140ms var(--ease), border-color 140ms var(--ease), transform 120ms var(--ease);
 }
 
-.mobile-action-bar a.highlight {
-  background: var(--btn-bg);
-  color: #ffffff;
+.mobile-menu-btn:active {
+  transform: scale(0.95);
+  background: var(--bg-alt);
+}
+
+.mobile-menu-btn .hamburger-bar {
+  width: 18px;
+  height: 2px;
+  background: var(--ink-heading);
+  border-radius: 2px;
+  transition: transform 220ms var(--ease), opacity 220ms var(--ease);
+  transform-origin: center;
+}
+
+.mobile-menu-btn.active .hamburger-bar:nth-child(1) {
+  transform: translateY(3.5px) rotate(45deg);
+}
+
+.mobile-menu-btn.active .hamburger-bar:nth-child(2) {
+  transform: translateY(-3.5px) rotate(-45deg);
+}
+
+.mobile-nav-drawer {
+  display: none;
+}
+
+.mobile-action-bar {
+  display: none;
+}
+
+/* ==========================================================================
+   MOBILE-FIRST OPTIMIZATIONS (Screen width <= 767px)
+   PC (>= 1024px) and Tablet (768px - 1023px) remain strictly untouched.
+   ========================================================================== */
+@media (max-width: 767px) {
+  /* 1. Body & Safe Areas */
+  body {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .wrap, .narrow {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  /* 2. Header & Navigation */
+  header {
+    height: 60px;
+  }
+
+  .brand {
+    gap: 10px;
+  }
+
+  .brand .logo {
+    padding: 3px;
+    border-radius: 7px;
+  }
+
+  .brand .logo img {
+    height: 26px;
+  }
+
+  .brand span {
+    font-size: 16px;
+    display: inline-block !important; /* Preserves firm name on mobile */
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  nav.desktop-nav {
+    display: none !important;
+  }
+
+  .header-cta {
+    display: none !important;
+  }
+
+  .mobile-menu-btn {
+    display: flex !important;
+  }
+
+  /* Mobile Navigation Drawer */
+  .mobile-nav-drawer {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 95;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 220ms var(--ease), opacity 220ms var(--ease);
+  }
+
+  .mobile-nav-drawer.open {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .mobile-nav-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(28, 27, 25, 0.45);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+
+  .mobile-nav-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+    padding: calc(env(safe-area-inset-top, 0px) + 16px) 20px 24px;
+    max-height: 85vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    transform: translateY(-16px);
+    transition: transform 240ms var(--ease);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-nav-drawer.open .mobile-nav-panel {
+    transform: translateY(0);
+  }
+
+  .mobile-nav-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .mobile-nav-close {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--bg-alt);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .mobile-nav-close:active {
+    background: var(--line);
+  }
+
+  .mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 0;
+  }
+
+  .mobile-nav-links a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 4px;
+    font-family: var(--serif);
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--ink-heading);
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    transition: color 140ms var(--ease);
+  }
+
+  .mobile-nav-links a .arr {
+    font-size: 20px;
+    color: var(--muted-light);
+  }
+
+  .mobile-nav-links a.active {
+    color: var(--gold);
+  }
+
+  .mobile-nav-links a.active .arr {
+    color: var(--gold);
+  }
+
+  .mobile-nav-footer {
+    margin-top: 18px;
+  }
+
+  .mobile-nav-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .mobile-nav-cta .btn {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .mobile-nav-addr {
+    font-size: 12.5px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 14px;
+    line-height: 1.4;
+  }
+
+  /* 3. Hero Section */
+  .hero {
+    padding: 44px 0 28px;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: clamp(28px, 7.2vw, 36px);
+    line-height: 1.14;
+    letter-spacing: -0.02em;
+    max-width: 100%;
+  }
+
+  .hero p.tagline {
+    font-size: 15.5px;
+    line-height: 1.5;
+    margin: 16px auto 26px;
+    max-width: 32ch;
+  }
+
+  .hero .row {
+    flex-direction: column;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+    gap: 12px;
+  }
+
+  .hero .row .btn {
+    width: 100%;
+    min-height: 48px;
+    font-size: 15px;
+  }
+
+  .hero .row .more {
+    margin-top: 6px;
+    justify-content: center;
+    font-size: 15.5px;
+  }
+
+  /* Sunil D. Patel Signature Tile on Mobile */
+  .tile {
+    grid-template-columns: 1fr;
+    margin-top: 36px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  }
+
+  .tile .t {
+    padding: 24px 20px 16px;
+    text-align: left;
+  }
+
+  .tile h2 {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+
+  .tile .t p {
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+
+  .tile .photo-wrap {
+    height: auto;
+    max-height: 300px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+    padding: 0 16px;
+  }
+
+  .tile .photo-wrap img {
+    height: auto;
+    max-height: 280px;
+    width: auto;
+    max-width: 85%;
+    object-fit: contain;
+    object-position: bottom center;
+    margin: 0 auto;
+    display: block;
+  }
+
+  /* 4. Section Spacing & Typography */
+  section {
+    padding: 56px 0 !important;
+  }
+
+  .h-big {
+    font-size: clamp(26px, 6.2vw, 32px);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    max-width: 100%;
+  }
+
+  .sub-p {
+    font-size: 15px;
+    line-height: 1.55;
+    margin-top: 12px;
+    max-width: 100%;
+  }
+
+  /* 5. Three Practices & Tailored Solutions (Crisp Mobile Cards) */
+  .cols {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 28px;
+  }
+
+  .cols > div {
+    background: var(--bg-surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    transition: transform 140ms var(--ease), border-color 140ms var(--ease);
+  }
+
+  .cols > div:active {
+    border-color: var(--line-strong);
+    background: #fdfdfd;
+  }
+
+  .cols h3 {
+    font-size: 20px;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .cols p {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  /* 6. Methodical Steps Sequence on Mobile */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .steps li {
+    background: var(--bg-surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px 18px 18px 16px;
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    column-gap: 14px;
+    row-gap: 4px;
+    align-items: start;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  }
+
+  .steps li::before {
+    content: counter(step-seq);
+    font: 600 16px/34px var(--f);
+    color: var(--gold);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--gold-subtle);
+    border: 1px solid rgba(179, 139, 63, 0.3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0;
+  }
+
+  .steps h3 {
+    grid-column: 2;
+    font-size: 18px;
+    line-height: 1.25;
+    margin-bottom: 0;
+    align-self: center;
+  }
+
+  .steps p {
+    grid-column: 2;
+    font-size: 14px;
+    line-height: 1.55;
+    margin-top: 4px;
+  }
+
+  /* 7. Statement Box */
+  .statement-box {
+    padding: 48px 0;
+  }
+
+  .statement-text {
+    font-size: 22px;
+    line-height: 1.3;
+    max-width: 100%;
+  }
+
+  .statement-box .btn {
+    width: 100%;
+    max-width: 280px;
+    margin-top: 20px;
+  }
+
+  /* 8. Partners Cards on Mobile */
+  .partner-wrap {
+    gap: 16px;
+    margin-top: 28px;
+  }
+
+  .partner-lead {
+    background: var(--bg-surface);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--gold);
+    border-radius: 16px;
+    padding: 22px 18px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  }
+
+  .partner-lead h3 {
+    font-size: 24px;
+    line-height: 1.15;
+  }
+
+  .partner-lead .role {
+    font-size: 14px;
+    margin-top: 6px;
+  }
+
+  .partner-lead .num-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--bg-alt);
+    padding: 12px 18px;
+    border-radius: 999px;
+    margin-top: 16px;
+    border: 1px solid var(--line);
+    width: 100%;
+  }
+
+  .partner-secondary {
+    background: var(--bg-surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px;
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 14px;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  }
+
+  .partner-secondary img {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+  }
+
+  .partner-secondary h3 {
+    font-size: 20px;
+    line-height: 1.2;
+    margin-bottom: 2px;
+  }
+
+  .partner-secondary .role {
+    font-size: 13.5px;
+    line-height: 1.4;
+  }
+
+  .partner-secondary .num-link {
+    grid-column: 1 / -1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--bg-alt);
+    padding: 12px 18px;
+    border-radius: 999px;
+    margin: 4px 0 0;
+    border: 1px solid var(--line);
+    width: 100%;
+  }
+
+  .jv-tag {
+    font-size: 18px;
+    margin-top: 12px;
+    line-height: 1.35;
+  }
+
+  /* 9. FAQ on Mobile */
+  .faq-list {
+    margin-top: 24px;
+  }
+
+  .faq-item {
+    padding: 18px 0;
+  }
+
+  .faq-trigger {
+    font-size: 16.5px;
+    gap: 12px;
+    line-height: 1.35;
+  }
+
+  .faq-icon {
+    font-size: 20px;
+  }
+
+  .faq-content {
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin-top: 12px;
+  }
+
+  /* 10. Contact & Form */
+  .two-cols {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+
+  .contact-info {
+    gap: 14px;
+  }
+
+  .contact-info > div {
+    background: var(--bg-surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  }
+
+  .contact-info h3 {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  .contact-info p {
+    font-size: 15.5px;
+    line-height: 1.5;
+  }
+
+  form {
+    gap: 16px;
+  }
+
+  input, textarea {
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 16px; /* Prevents auto-zoom in mobile Safari */
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+    min-height: 48px;
+    justify-content: center;
+    font-size: 15px;
+  }
+
+  /* 11. Footer */
+  footer {
+    padding: 48px 0 24px;
+  }
+
+  .footer-grid {
+    gap: 28px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 40px;
+  }
+
+  .footer-credit {
+    justify-content: flex-start;
+    gap: 8px 12px;
+    margin-top: 16px;
+    font-size: 12.5px;
+  }
+
+  /* 12. Bar Council Disclaimer Modal on Mobile */
+  .disclaimer-overlay {
+    padding: 16px;
+  }
+
+  .disclaimer-modal {
+    padding: 22px 18px;
+    border-radius: 18px;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .disclaimer-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .disclaimer-scroll {
+    flex: 1;
+    max-height: 46vh;
+    padding: 10px 0;
+    margin-bottom: 18px;
+    font-size: 13.5px;
+  }
+
+  .disclaimer-modal .btn {
+    width: 100%;
+  }
+
+  /* 13. Sticky Mobile Bottom Action Bar */
+  .mobile-action-bar {
+    display: flex !important;
+    gap: 8px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 85;
+    background: color-mix(in srgb, var(--bg) 94%, transparent);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  .bar-btn {
+    flex: 1;
+    min-height: 46px;
+    border-radius: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-decoration: none;
+    touch-action: manipulation;
+    transition: transform 120ms var(--ease), background-color 140ms var(--ease);
+    border: 1px solid var(--line);
+  }
+
+  .bar-btn:active {
+    transform: scale(0.96);
+  }
+
+  .bar-btn svg {
+    flex-shrink: 0;
+  }
+
+  .bar-btn-call {
+    background: var(--btn-bg);
+    color: #ffffff;
+    border-color: var(--btn-bg);
+  }
+
+  .bar-btn-wa {
+    background: var(--whatsapp);
+    color: #ffffff;
+    border-color: var(--whatsapp);
+  }
+
+  .bar-btn-maps {
+    background: var(--bg-surface);
+    color: var(--ink);
+  }
+}
+
+/* Small phone tweaks (< 390px) */
+@media (max-width: 380px) {
+  .wrap, .narrow {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .brand span {
+    max-width: 160px;
+    font-size: 15px;
+  }
+  .mobile-action-bar {
+    padding-left: 10px;
+    padding-right: 10px;
+    gap: 6px;
+  }
+  .bar-btn {
+    font-size: 12px;
+    padding: 0 6px;
+  }
+  .bar-btn svg {
+    width: 15px;
+    height: 15px;
+  }
 }
 
 /* Reduced Motion Override */

@@ -882,73 +882,84 @@ footer p, footer a {
 }
 
 /* ==========================================================================
-   Mobile-Only Component Base Definitions (Hidden on PC & Tablet)
+   Mobile-Only Base Definitions (Hidden on desktop & tablet by default)
    ========================================================================== */
-.mobile-menu-btn {
-  display: none;
-  width: 42px;
-  height: 42px;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 5px;
-  background: var(--bg-surface);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  cursor: pointer;
-  padding: 0;
-  touch-action: manipulation;
-  transition: background-color 140ms var(--ease), border-color 140ms var(--ease), transform 120ms var(--ease);
-}
-
-.mobile-menu-btn:active {
-  transform: scale(0.95);
-  background: var(--bg-alt);
-}
-
-.mobile-menu-btn .hamburger-bar {
-  width: 18px;
-  height: 2px;
-  background: var(--ink-heading);
-  border-radius: 2px;
-  transition: transform 220ms var(--ease), opacity 220ms var(--ease);
-  transform-origin: center;
-}
-
-.mobile-menu-btn.active .hamburger-bar:nth-child(1) {
-  transform: translateY(3.5px) rotate(45deg);
-}
-
-.mobile-menu-btn.active .hamburger-bar:nth-child(2) {
-  transform: translateY(-3.5px) rotate(-45deg);
-}
-
-.mobile-nav-drawer {
-  display: none;
-}
-
+.mobile-menu-btn,
+.mobile-nav-drawer,
 .mobile-action-bar {
   display: none;
 }
 
+.mobile-menu-btn {
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 6px;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-menu-btn .hamburger-bar {
+  width: 20px;
+  height: 1.5px;
+  background: var(--ink-heading);
+  border-radius: 1px;
+  transition: transform 300ms var(--ease), opacity 200ms var(--ease);
+  transform-origin: center;
+}
+
+.mobile-menu-btn.active .hamburger-bar:nth-child(1) {
+  transform: translateY(3.75px) rotate(45deg);
+}
+
+.mobile-menu-btn.active .hamburger-bar:nth-child(2) {
+  transform: translateY(-3.75px) rotate(-45deg);
+}
+
+
 /* ==========================================================================
-   MOBILE-FIRST OPTIMIZATIONS (Screen width <= 767px)
-   PC (>= 1024px) and Tablet (768px - 1023px) remain strictly untouched.
+   APPLE-PHILOSOPHY MOBILE EXPERIENCE (max-width: 767px)
+
+   Design principles applied:
+   – Separation through SPACE, not borders or shadows
+   – Full-bleed backgrounds, inset content with generous padding
+   – Large confident type with tight negative tracking
+   – No card borders, no box-shadows on content
+   – Clean vertical flow with rhythm
+   – 50px+ touch targets
+   – Pill buttons, glass chrome
    ========================================================================== */
 @media (max-width: 767px) {
-  /* 1. Body & Safe Areas */
+
+  /* ── Global ── */
   body {
-    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    font-size: 16px;
+    line-height: 1.6;
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  }
+
+  html {
+    scroll-padding-top: 56px;
   }
 
   .wrap, .narrow {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 24px;
+    padding-right: 24px;
   }
 
-  /* 2. Header & Navigation */
+  /* ── Header: Apple-thin glass bar ── */
   header {
-    height: 60px;
+    height: 48px;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
   }
 
   .brand {
@@ -956,27 +967,23 @@ footer p, footer a {
   }
 
   .brand .logo {
-    padding: 3px;
-    border-radius: 7px;
+    padding: 2px;
+    border-radius: 6px;
+    box-shadow: none;
   }
 
   .brand .logo img {
-    height: 26px;
+    height: 24px;
   }
 
   .brand span {
-    font-size: 16px;
-    display: inline-block !important; /* Preserves firm name on mobile */
-    max-width: 200px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-family: var(--f);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
   }
 
-  nav.desktop-nav {
-    display: none !important;
-  }
-
+  nav.desktop-nav,
   .header-cta {
     display: none !important;
   }
@@ -985,28 +992,31 @@ footer p, footer a {
     display: flex !important;
   }
 
-  /* Mobile Navigation Drawer */
+
+  /* ── Mobile Navigation: Full-screen overlay ── */
   .mobile-nav-drawer {
     display: block;
     position: fixed;
     inset: 0;
-    z-index: 95;
-    visibility: hidden;
-    opacity: 0;
-    transition: visibility 220ms var(--ease), opacity 220ms var(--ease);
+    z-index: 200;
+    pointer-events: none;
   }
 
   .mobile-nav-drawer.open {
-    visibility: visible;
-    opacity: 1;
+    pointer-events: auto;
   }
 
   .mobile-nav-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(28, 27, 25, 0.45);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0);
+    transition: background 350ms var(--ease);
+  }
+
+  .mobile-nav-drawer.open .mobile-nav-backdrop {
+    background: rgba(0, 0, 0, 0.3);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
   }
 
   .mobile-nav-panel {
@@ -1015,16 +1025,14 @@ footer p, footer a {
     left: 0;
     right: 0;
     background: var(--bg);
-    border-bottom: 1px solid var(--line);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
-    padding: calc(env(safe-area-inset-top, 0px) + 16px) 20px 24px;
-    max-height: 85vh;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    transform: translateY(-16px);
-    transition: transform 240ms var(--ease);
+    padding: calc(env(safe-area-inset-top, 0px) + 12px) 24px 32px;
+    transform: translateY(-100%);
+    transition: transform 400ms var(--ease);
     display: flex;
     flex-direction: column;
+    max-height: 100vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .mobile-nav-drawer.open .mobile-nav-panel {
@@ -1035,50 +1043,54 @@ footer p, footer a {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--line);
+    padding-bottom: 24px;
+  }
+
+  .mobile-nav-top .brand span {
+    display: inline-block !important;
   }
 
   .mobile-nav-close {
-    width: 38px;
-    height: 38px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
     background: var(--bg-alt);
-    border: 1px solid var(--line);
+    border: none;
     color: var(--ink);
     cursor: pointer;
-  }
-
-  .mobile-nav-close:active {
-    background: var(--line);
   }
 
   .mobile-nav-links {
     display: flex;
     flex-direction: column;
-    padding: 8px 0;
+    padding: 0;
   }
 
   .mobile-nav-links a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 4px;
+    padding: 20px 0;
     font-family: var(--serif);
-    font-size: 19px;
+    font-size: 28px;
     font-weight: 600;
+    letter-spacing: -0.025em;
     color: var(--ink-heading);
     border-bottom: 1px solid var(--line);
     text-decoration: none;
-    transition: color 140ms var(--ease);
+  }
+
+  .mobile-nav-links a:first-child {
+    border-top: 1px solid var(--line);
   }
 
   .mobile-nav-links a .arr {
-    font-size: 20px;
+    font-size: 22px;
     color: var(--muted-light);
+    font-weight: 400;
   }
 
   .mobile-nav-links a.active {
@@ -1090,456 +1102,492 @@ footer p, footer a {
   }
 
   .mobile-nav-footer {
-    margin-top: 18px;
+    margin-top: 32px;
   }
 
   .mobile-nav-cta {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
   }
 
   .mobile-nav-cta .btn {
     width: 100%;
-    min-height: 48px;
+    min-height: 50px;
+    font-size: 16px;
   }
 
   .mobile-nav-addr {
-    font-size: 12.5px;
+    font-size: 13px;
     color: var(--muted);
     text-align: center;
-    margin-top: 14px;
-    line-height: 1.4;
+    margin-top: 20px;
+    line-height: 1.5;
   }
 
-  /* 3. Hero Section */
+
+  /* ── Hero: Confident, centered, spacious ── */
   .hero {
-    padding: 44px 0 28px;
+    padding: 56px 0 24px;
     text-align: center;
   }
 
   .hero h1 {
-    font-size: clamp(28px, 7.2vw, 36px);
-    line-height: 1.14;
-    letter-spacing: -0.02em;
+    font-size: 36px;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
     max-width: 100%;
   }
 
   .hero p.tagline {
-    font-size: 15.5px;
+    font-size: 17px;
     line-height: 1.5;
-    margin: 16px auto 26px;
-    max-width: 32ch;
+    margin: 20px auto 36px;
+    max-width: 30ch;
   }
 
   .hero .row {
     flex-direction: column;
     width: 100%;
-    max-width: 320px;
-    margin: 0 auto;
     gap: 12px;
   }
 
   .hero .row .btn {
     width: 100%;
-    min-height: 48px;
-    font-size: 15px;
+    min-height: 50px;
+    font-size: 16px;
+    border-radius: 14px;
   }
 
   .hero .row .more {
-    margin-top: 6px;
+    margin-top: 8px;
     justify-content: center;
-    font-size: 15.5px;
+    font-size: 16px;
   }
 
-  /* Sunil D. Patel Signature Tile on Mobile */
+
+  /* ── Signature Portrait Tile ── */
   .tile {
     grid-template-columns: 1fr;
-    margin-top: 36px;
+    margin-top: 48px;
     border-radius: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    box-shadow: none;
   }
 
   .tile .t {
-    padding: 24px 20px 16px;
+    padding: 32px 24px 20px;
     text-align: left;
   }
 
   .tile h2 {
-    font-size: 24px;
-    margin-bottom: 8px;
+    font-size: 28px;
+    margin-bottom: 10px;
   }
 
   .tile .t p {
-    font-size: 14.5px;
-    line-height: 1.55;
+    font-size: 16px;
+    line-height: 1.5;
   }
 
   .tile .photo-wrap {
     height: auto;
-    max-height: 300px;
     display: flex;
     align-items: flex-end;
     justify-content: center;
     overflow: hidden;
-    padding: 0 16px;
   }
 
   .tile .photo-wrap img {
     height: auto;
-    max-height: 280px;
+    max-height: 340px;
     width: auto;
-    max-width: 85%;
+    max-width: 80%;
     object-fit: contain;
     object-position: bottom center;
     margin: 0 auto;
     display: block;
   }
 
-  /* 4. Section Spacing & Typography */
+
+  /* ── Section rhythm ── */
   section {
-    padding: 56px 0 !important;
+    padding: 72px 0 !important;
+    border-top-color: transparent;
+  }
+
+  .alt {
+    border-top-color: transparent;
   }
 
   .h-big {
-    font-size: clamp(26px, 6.2vw, 32px);
-    line-height: 1.15;
-    letter-spacing: -0.015em;
+    font-size: 30px;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
     max-width: 100%;
   }
 
   .sub-p {
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1.55;
-    margin-top: 12px;
+    margin-top: 16px;
     max-width: 100%;
   }
 
-  /* 5. Three Practices & Tailored Solutions (Crisp Mobile Cards) */
+
+  /* ── Columns: clean stack, NO borders, NO shadows ── */
   .cols {
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    margin-top: 28px;
+    gap: 40px;
+    margin-top: 40px;
   }
 
   .cols > div {
-    background: var(--bg-surface);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-    transition: transform 140ms var(--ease), border-color 140ms var(--ease);
-  }
-
-  .cols > div:active {
-    border-color: var(--line-strong);
-    background: #fdfdfd;
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
   }
 
   .cols h3 {
-    font-size: 20px;
-    line-height: 1.2;
+    font-size: 22px;
+    line-height: 1.18;
     margin-bottom: 8px;
   }
 
   .cols p {
-    font-size: 14px;
-    line-height: 1.55;
+    font-size: 15px;
+    line-height: 1.6;
   }
 
-  /* 6. Methodical Steps Sequence on Mobile */
+
+  /* ── Steps: clean numbered list, NO cards ── */
   .steps {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-top: 28px;
+    gap: 36px;
+    margin-top: 40px;
   }
 
   .steps li {
-    background: var(--bg-surface);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 18px 18px 18px 16px;
-    display: grid;
-    grid-template-columns: 36px 1fr;
-    column-gap: 14px;
-    row-gap: 4px;
-    align-items: start;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    display: block;
+    box-shadow: none;
   }
 
   .steps li::before {
     content: counter(step-seq);
-    font: 600 16px/34px var(--f);
+    font: 600 48px/1 var(--serif);
     color: var(--gold);
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: var(--gold-subtle);
-    border: 1px solid rgba(179, 139, 63, 0.3);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 0;
+    display: block;
+    margin-bottom: 12px;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    background: none;
+    border: none;
   }
 
   .steps h3 {
-    grid-column: 2;
-    font-size: 18px;
-    line-height: 1.25;
-    margin-bottom: 0;
-    align-self: center;
+    grid-column: unset;
+    font-size: 22px;
+    line-height: 1.18;
+    margin-bottom: 8px;
+    align-self: unset;
   }
 
   .steps p {
-    grid-column: 2;
-    font-size: 14px;
-    line-height: 1.55;
-    margin-top: 4px;
+    grid-column: unset;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-top: 0;
   }
 
-  /* 7. Statement Box */
+
+  /* ── Statement ── */
   .statement-box {
-    padding: 48px 0;
+    padding: 56px 0;
   }
 
   .statement-text {
-    font-size: 22px;
-    line-height: 1.3;
+    font-size: 26px;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
     max-width: 100%;
   }
 
-  .statement-box .btn {
-    width: 100%;
-    max-width: 280px;
-    margin-top: 20px;
+  .statement-text span {
+    display: block;
+    margin-top: 8px;
   }
 
-  /* 8. Partners Cards on Mobile */
-  .partner-wrap {
-    gap: 16px;
+  .statement-box .btn {
     margin-top: 28px;
   }
 
+
+  /* ── Partners: clean, spacious, NO card borders ── */
+  .partner-wrap {
+    gap: 48px;
+    margin-top: 40px;
+  }
+
   .partner-lead {
-    background: var(--bg-surface);
-    border: 1px solid var(--line);
-    border-left: 4px solid var(--gold);
-    border-radius: 16px;
-    padding: 22px 18px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    background: none;
+    border: none;
+    border-left: none;
+    border-radius: 0;
+    padding: 0;
+    padding-bottom: 48px;
+    border-bottom: 1px solid var(--line);
+    box-shadow: none;
   }
 
   .partner-lead h3 {
-    font-size: 24px;
-    line-height: 1.15;
+    font-size: 30px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
   }
 
   .partner-lead .role {
-    font-size: 14px;
-    margin-top: 6px;
+    font-size: 16px;
+    margin-top: 8px;
   }
 
   .partner-lead .num-link {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 16px;
+    gap: 10px;
+    font-size: 24px;
     font-weight: 600;
     color: var(--ink);
-    background: var(--bg-alt);
-    padding: 12px 18px;
-    border-radius: 999px;
-    margin-top: 16px;
-    border: 1px solid var(--line);
-    width: 100%;
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    margin-top: 20px;
+    border: none;
+    width: auto;
   }
 
   .partner-secondary {
-    background: var(--bg-surface);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 18px;
-    display: grid;
-    grid-template-columns: 56px 1fr;
-    gap: 14px;
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
     align-items: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    box-shadow: none;
   }
 
   .partner-secondary img {
-    width: 56px;
-    height: 56px;
+    width: 72px;
+    height: 72px;
     border-radius: 50%;
   }
 
+  .partner-secondary > div {
+    flex: 1;
+    min-width: 0;
+  }
+
   .partner-secondary h3 {
-    font-size: 20px;
+    font-size: 22px;
     line-height: 1.2;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
   }
 
   .partner-secondary .role {
-    font-size: 13.5px;
+    font-size: 15px;
     line-height: 1.4;
   }
 
   .partner-secondary .num-link {
-    grid-column: 1 / -1;
+    grid-column: unset;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 16px;
+    gap: 10px;
+    font-size: 20px;
     font-weight: 600;
     color: var(--ink);
-    background: var(--bg-alt);
-    padding: 12px 18px;
-    border-radius: 999px;
-    margin: 4px 0 0;
-    border: 1px solid var(--line);
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    margin: 0;
+    border: none;
     width: 100%;
   }
 
   .jv-tag {
-    font-size: 18px;
-    margin-top: 12px;
-    line-height: 1.35;
+    font-size: 20px;
+    margin-top: 16px;
+    line-height: 1.3;
   }
 
-  /* 9. FAQ on Mobile */
+
+  /* ── FAQ ── */
   .faq-list {
-    margin-top: 24px;
+    margin-top: 32px;
   }
 
   .faq-item {
-    padding: 18px 0;
+    padding: 22px 0;
   }
 
   .faq-trigger {
-    font-size: 16.5px;
-    gap: 12px;
-    line-height: 1.35;
+    font-size: 19px;
+    gap: 16px;
+    line-height: 1.3;
   }
 
   .faq-icon {
-    font-size: 20px;
+    font-size: 22px;
   }
 
   .faq-content {
-    font-size: 14.5px;
-    line-height: 1.6;
-    margin-top: 12px;
+    font-size: 15px;
+    line-height: 1.65;
+    margin-top: 14px;
   }
 
-  /* 10. Contact & Form */
+
+  /* ── Contact & Form ── */
   .two-cols {
     display: flex;
     flex-direction: column;
-    gap: 36px;
+    gap: 56px;
   }
 
   .contact-info {
-    gap: 14px;
+    gap: 32px;
   }
 
   .contact-info > div {
-    background: var(--bg-surface);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 18px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
   }
 
   .contact-info h3 {
     font-size: 12px;
-    margin-bottom: 6px;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
   }
 
   .contact-info p {
-    font-size: 15.5px;
+    font-size: 17px;
     line-height: 1.5;
   }
 
   form {
-    gap: 16px;
+    gap: 20px;
   }
 
   input, textarea {
-    padding: 14px;
-    border-radius: 12px;
-    font-size: 16px; /* Prevents auto-zoom in mobile Safari */
+    padding: 16px;
+    border-radius: 14px;
+    min-height: 52px;
+    font-size: 16px;
+    background: var(--bg-alt);
+    border: 1px solid transparent;
+  }
+
+  input:focus, textarea:focus {
+    background: #ffffff;
+    border-color: var(--gold);
+  }
+
+  textarea {
+    min-height: 120px;
   }
 
   .form-actions {
     flex-direction: column;
-    gap: 10px;
-    margin-top: 4px;
+    gap: 12px;
+    margin-top: 8px;
   }
 
   .form-actions .btn {
     width: 100%;
-    min-height: 48px;
+    min-height: 50px;
     justify-content: center;
-    font-size: 15px;
+    font-size: 16px;
+    border-radius: 14px;
   }
 
-  /* 11. Footer */
+
+  /* ── Footer ── */
   footer {
-    padding: 48px 0 24px;
+    padding: 56px 0 24px;
+    border-top: none;
   }
 
   .footer-grid {
-    gap: 28px;
+    gap: 36px;
   }
 
   .footer-bottom {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
-    margin-top: 40px;
+    margin-top: 48px;
   }
 
   .footer-credit {
     justify-content: flex-start;
-    gap: 8px 12px;
-    margin-top: 16px;
-    font-size: 12.5px;
+    gap: 8px 16px;
+    margin-top: 20px;
+    font-size: 13px;
   }
 
-  /* 12. Bar Council Disclaimer Modal on Mobile */
+
+  /* ── Disclaimer Modal ── */
   .disclaimer-overlay {
-    padding: 16px;
+    padding: 20px;
+    align-items: flex-end;
   }
 
   .disclaimer-modal {
-    padding: 22px 18px;
-    border-radius: 18px;
-    max-height: 88vh;
+    padding: 28px 24px;
+    border-radius: 20px;
+    border: none;
+    max-height: 80vh;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 -8px 48px rgba(0, 0, 0, 0.18);
   }
 
   .disclaimer-title {
-    font-size: 20px;
-    margin-bottom: 10px;
+    font-size: 22px;
+    margin-bottom: 12px;
   }
 
   .disclaimer-scroll {
     flex: 1;
-    max-height: 46vh;
-    padding: 10px 0;
-    margin-bottom: 18px;
-    font-size: 13.5px;
+    max-height: 50vh;
+    padding: 14px 0;
+    margin-bottom: 20px;
+    font-size: 14px;
   }
 
   .disclaimer-modal .btn {
     width: 100%;
+    min-height: 50px;
+    font-size: 16px;
+    border-radius: 14px;
   }
 
-  /* 13. Sticky Mobile Bottom Action Bar */
+
+  /* ── Bottom Action Bar: glass pill bar ── */
   .mobile-action-bar {
     display: flex !important;
     gap: 8px;
@@ -1548,32 +1596,33 @@ footer p, footer a {
     left: 0;
     right: 0;
     z-index: 85;
-    background: color-mix(in srgb, var(--bg) 94%, transparent);
-    -webkit-backdrop-filter: blur(20px);
-    backdrop-filter: blur(20px);
-    border-top: 1px solid var(--line);
-    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+    background: color-mix(in srgb, var(--bg) 80%, transparent);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    border-top: 0.5px solid rgba(0, 0, 0, 0.08);
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
   }
 
   .bar-btn {
     flex: 1;
-    min-height: 46px;
-    border-radius: 14px;
+    min-height: 44px;
+    border-radius: 12px;
     font-size: 13px;
     font-weight: 600;
+    letter-spacing: -0.01em;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
     text-decoration: none;
     touch-action: manipulation;
-    transition: transform 120ms var(--ease), background-color 140ms var(--ease);
-    border: 1px solid var(--line);
+    transition: transform 120ms var(--ease), opacity 120ms var(--ease);
+    border: none;
   }
 
   .bar-btn:active {
     transform: scale(0.96);
+    opacity: 0.85;
   }
 
   .bar-btn svg {
@@ -1583,47 +1632,47 @@ footer p, footer a {
   .bar-btn-call {
     background: var(--btn-bg);
     color: #ffffff;
-    border-color: var(--btn-bg);
   }
 
   .bar-btn-wa {
     background: var(--whatsapp);
     color: #ffffff;
-    border-color: var(--whatsapp);
   }
 
   .bar-btn-maps {
-    background: var(--bg-surface);
+    background: var(--bg-alt);
     color: var(--ink);
   }
-}
 
-/* Small phone tweaks (< 390px) */
-@media (max-width: 380px) {
+} /* end @media (max-width: 767px) */
+
+
+/* ── Extra small phones ── */
+@media (max-width: 374px) {
   .wrap, .narrow {
-    padding-left: 14px;
-    padding-right: 14px;
+    padding-left: 20px;
+    padding-right: 20px;
   }
-  .brand span {
-    max-width: 160px;
+  .hero h1 {
+    font-size: 30px;
+  }
+  .hero p.tagline {
     font-size: 15px;
   }
-  .mobile-action-bar {
-    padding-left: 10px;
-    padding-right: 10px;
-    gap: 6px;
+  .h-big {
+    font-size: 26px;
   }
   .bar-btn {
     font-size: 12px;
-    padding: 0 6px;
+    gap: 4px;
   }
-  .bar-btn svg {
-    width: 15px;
-    height: 15px;
+  .bar-btn span {
+    display: none;
   }
 }
 
-/* Reduced Motion Override */
+
+/* ── Reduced Motion ── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation: none !important;
